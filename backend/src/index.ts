@@ -7,6 +7,12 @@ import userRoutes from './router/user'
 import hazardRoutes from './router/hazardtypes'
 import dotenv from 'dotenv';
 import config from './config/config'
+import cors from "cors";
+import "express-async-errors";
+import { resetPasswordRequestController } from './controllers/auth.controller';
+import { resetPasswordController } from './controllers/auth.controller';
+
+
 
 
 
@@ -37,6 +43,10 @@ router.use((req, res, next) => {
    next();
 });
 
+
+//security middleware
+router.use(cors());
+
 //Parse the body of the request 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
@@ -61,10 +71,12 @@ router.use((req, res, next) => {
 
 // Use Route
 
-router.use('/users',userRoutes)
-router.use('/hazard',hazardRoutes)
+router.use('/users',userRoutes);
+router.use('/hazard',hazardRoutes);
+router.use('/api', userRoutes);
+router.use('/api', resetPasswordController);
+router.use('/api', resetPasswordRequestController);
 
-router.use('/api', userRoutes)
 
 
 // Error handling for not found routes
@@ -85,6 +97,7 @@ router.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     message: error.message
   });
 });
+
 
 
 
